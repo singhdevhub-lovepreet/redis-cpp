@@ -34,7 +34,7 @@ int write_all(int socket_fd, char *buff, int n){
 int query(int socket_fd, char *text){
     int max_message_length = 4096;
     int len = strlen(text);
-    char wbuff[4+max_message_length+1];
+    char wbuff[4+max_message_length];
     memcpy(wbuff, &len, 4);
     memcpy(&wbuff[4], text, len);
     write_all(socket_fd, wbuff, 4+len);

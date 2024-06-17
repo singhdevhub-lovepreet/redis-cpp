@@ -37,9 +37,9 @@ int write_all(int socket_fd, char *buff, int n)
 
 int one_request(int socket_fd)
 {
-    int max_message_length = 4096;
-    char rbuff[4 + max_message_length + 1];
 
+    int max_message_length = 4096;
+    char rbuff[4 + max_message_length];
     int read = read_all(socket_fd, rbuff, 4);
     if (read < 0)
     {
@@ -56,11 +56,12 @@ int one_request(int socket_fd)
     {
         return -1;
     }
-    rbuff[4 + len] = '\0';
+    rbuff[4 + read] = '\0';
     char reply[] = "world";
-    char wbuff[4 + strlen(reply)];
+    len = strlen(reply);
+    char wbuff[4 + len];
     memcpy(wbuff, &len, 4);
-    memcpy(&wbuff[4], reply, strlen(reply));
+    memcpy(&wbuff[4], reply, len);
     return write_all(socket_fd, wbuff, 4 + len);
 }
 
@@ -107,7 +108,13 @@ int main(int argc, char *argv[])
                 {
                     std::cout << "Failed to accept the connection" << std::endl;
                 }
-                one_request(new_socket_fd);
+                while (true)
+                {
+                    if (one_request(new_socket_fd) < 0)
+                    {
+                        break;
+                    }
+                }
                 close(new_socket_fd);
             }
         }
