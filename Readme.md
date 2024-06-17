@@ -1,7 +1,11 @@
 ## A Redis implementation in C++
 
-### This is a simple client & server communication over TCP
+### Implementation where we need to parse a request with specific schema
 
-- Here client sends a message, server accept the connection and sends a msg back
-- We have used recv() & send() sys calls, one can use read() and write() sys calls too
-- because sockets are too having file descriptors and hence can be read and write into
+- We will get a request with schema
+
+“+-----+------+-----+------+--------
+| len | msg1 | len | msg2 | more...
++-----+------+-----+------+--------”
+
+- As of now we will read this message, assuming len = 4bytes, will get message form the TCP request
